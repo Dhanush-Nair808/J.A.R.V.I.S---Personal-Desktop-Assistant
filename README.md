@@ -62,36 +62,34 @@ It runs as a **FastAPI backend** + **Streamlit frontend** and gives you natural 
 ---
 
 ## 📁 Project Structure
-voice-assistant/                          # Environment variables (API keys, config)
-├── README.md
-├── requirements.txt
-├── run_app.ps1                   # One-click launcher for Windows
-├── wake_listener.py
-│
-├── backend/                      # FastAPI Backend
-│   ├── __init__.py
-│   ├── main.py                   # FastAPI entrypoint
-│   ├── agent.py                  # LangGraph AI Agent
-│   ├── config.py                 # Settings & environment loader
-│   ├── memory.py                 # In-memory conversation store
-│   ├── memory_sql.py             # SQLite history persistence
-│   │
-│   ├── tools/                    # Tool definitions
+voice-assistant/
+├── .streamlit/
+├── .vscode/
+├── backend/
+│   ├── tools/
 │   │   ├── __init__.py
-│   │   └── system_tools.py       # All J.A.R.V.I.S. tools (files, apps, etc.)
-│   │
-│   └── voice/                    # Voice capabilities
-│       ├── __init__.py
-│       ├── stt.py                # Speech-to-Text (faster-whisper)
-│       └── tts.py                # Text-to-Speech (edge-tts)
-│
-├── frontend/                     # Streamlit User Interface
-│   └── app.py                    # Main frontend application
-│
-├── workspace/                    # Default safe workspace folder
-│
-├── .streamlit/                   # Streamlit configuration
-├── .vscode/                      # VS Code settings
+│   │   └── system_tools.py       # Local OS automation tools
+│   ├── voice/
+│   │   ├── __init__.py
+│   │   ├── stt.py                # STT processing engine
+│   │   └── tts.py                # TTS generation engine
+│   ├── __init__.py
+│   ├── agent.py                  # LangGraph state machine orchestrator
+│   ├── config.py                 # Pydantic BaseSettings loader
+│   ├── main.py                   # FastAPI service runner
+│   ├── memory.py                 # Volatile session context
+│   └── memory_sql.py             # Persistent SQLite backend
+├── frontend/
+│   └── app.py                    # Streamlit UI layout and state management
+├── workspace/              # Preserves empty safe workspace directory
+├── .env.example                  # Template for credentials (API keys, paths)
+├── .gitignore                    
+├── LICENSE                       # Project distribution permissions
+├── README.md                     # Setup instructions and documentation
+├── requirements.txt              # Explicit python package dependencies
+├── run_app.ps1                   # Automated local execution script
+└── wake_listener.py              # Hotword detection loop to trigger assistant
+
 
 
 
@@ -103,9 +101,11 @@ voice-assistant/                          # Environment variables (API keys, con
 ```powershell
 python -m venv venv
 venv\Scripts\activate
+```
 3. Install Dependencies
-PowerShellpip install -r requirements.txt
-(You may need to create requirements.txt with: fastapi, uvicorn, streamlit, langchain, faster-whisper, edge-tts, pyautogui, etc.)*
+```PowerShellpip install -r requirements.txt```
+(You may need to create requirements.txt with: fastapi, uvicorn, streamlit, langchain, faster-whisper, edge-tts, pyautogui, etc.)
+
 4. Configure .env
 env# AI
 MISTRAL_API_KEY=your_mistral_api_key_here
@@ -128,6 +128,7 @@ BACKEND_HOST=127.0.0.1
 BACKEND_PORT=8000
 Note: For Gmail, use an App Password, not your regular password.
 
+
 ▶️ Running J.A.R.V.I.S.
 
 Wake Word Activation (Recommended)
@@ -137,12 +138,13 @@ To make "Hey Jarvis" work automatically on startup:
 Press Win + R, type shell:startup and press Enter.
 Create a new text file named Start_JARVIS_Listener.bat
 Paste the following into it:
-
+```
 batch@echo off
 title J.A.R.V.I.S Wake Word Listener
 cd /d "C:\Users\Dhanush Nair\OneDrive\Desktop\voice-assistant\voice-assistant"
 venv\Scripts\python.exe wake_listener.py
 pause
+```
 
 Save the file and restart your computer.
 
@@ -160,10 +162,14 @@ Open your browser to http://localhost:8501
 Manual Start
 
 PowerShell# Terminal 1
+```
 uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
+```
 
 # Terminal 2
+```
 streamlit run frontend/app.py
+```
 
 📋 Available Tools (Agent Capabilities)
 The agent has access to these tool groups:
