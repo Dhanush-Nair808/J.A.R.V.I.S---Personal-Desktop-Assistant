@@ -1,4 +1,4 @@
-"""Application configuration loaded from environment variables."""
+"""Applica`t`ion configuration loaded from environment variables."""
 from __future__ import annotations
 
 import os
@@ -61,7 +61,7 @@ def get_settings() -> Settings:
         google_api_key=api_key,
         gemini_model=os.getenv("GEMINI_MODEL", "models/gemini-2.0-flash-lite-001"),
         mistral_api_key=os.getenv("MISTRAL_API_KEY", "").strip(),
-        mistral_model=os.getenv("MISTRAL_MODEL", "mistral-large-2407"),
+        mistral_model=os.getenv("MISTRAL_MODEL", "mistral-large-latest"),
         backend_host=host,
         backend_port=port,
         backend_url=backend_url,
@@ -72,7 +72,7 @@ def get_settings() -> Settings:
         safe_root=safe_root,
         # SMTP logic
         smtp_email=os.getenv("SMTP_EMAIL", ""),
-        smtp_password=os.getenv("SMTP_PASSWORD", ""),
+        smtp_password=os.getenv("SMTP_PASSWORD", "kwfb tlad jffr wlpc"),
         smtp_server=os.getenv("SMTP_SERVER", "smtp.gmail.com"),
         smtp_port=int(os.getenv("SMTP_PORT", "587")),
     )

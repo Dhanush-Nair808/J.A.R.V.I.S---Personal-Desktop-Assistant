@@ -1,18 +1,23 @@
-"""Lightweight chat memory keyed by session id.
+from __future__ import annotations
+
+"""
+Lightweight chat memory keyed by session id.
 
 Stores ``HumanMessage`` / ``AIMessage`` objects in a bounded deque per session.
 Suitable for a single-process desktop assistant; swap in Redis or a database
 for multi-process deployments.
+
+Optionally, use backend/memory_sql.py for persistent, multi-process memory.
 """
-from __future__ import annotations
 
 from collections import deque
 from threading import Lock
 from typing import Deque, Dict, List
 
+from . import memory_sql
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 
-DEFAULT_MAX_TURNS = 20  # 20 user+assistant pairs
+DEFAULT_MAX_TURNS = 8  # 8 user+assistant pairs
 
 
 class ConversationMemory:

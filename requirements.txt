@@ -15,3 +15,12 @@ edge-tts==6.1.12
 
 streamlit==1.39.0
 requests==2.32.3
+psutil
+pyautogui
+keyboard
+numpy
+openwakeword
+pyaudio
+langgraph
+google-auth
+google-generativeai
