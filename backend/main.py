@@ -26,10 +26,12 @@ from pydantic import BaseModel, Field  # noqa: E402
 
 from config import settings  # noqa: E402
 
-from .agent import run_agent  # noqa: E402
-from .memory import memory  # noqa: E402
-from .voice.stt import transcribe_bytes  # noqa: E402
-from .voice.tts import stream_speech  # noqa: E402
+from .agent import run_agent
+from .memory import memory
+from . import memory_sql
+from .voice.stt import transcribe_bytes
+from .voice.tts import stream_speech
+ 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("voice-assistant")
@@ -91,21 +93,31 @@ async def chat(req: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=500, detail=f"Agent error: {exc}") from exc
     return ChatResponse(reply=reply, session_id=req.session_id)
 
+@app.get("/sessions")
+async def sessions() -> list[dict]:
+    rows = memory_sql.list_sessions()
+    return [
+        {"session_id": row[0], "last_time": row[1]} for row in rows
+    ]
 
 @app.get("/history/{session_id}", response_model=HistoryResponse)
 async def history(session_id: str) -> HistoryResponse:
-    msgs = [
-        {"role": getattr(m, "type", "unknown"), "content": m.content}
-        for m in memory.history(session_id)
-    ]
+    rows = memory_sql.get_full_history(session_id)
+    msgs = [{"role": role, "content": content} for role, content in rows]
     return HistoryResponse(session_id=session_id, messages=msgs)
 
 
 @app.delete("/history/{session_id}")
 async def clear_history(session_id: str) -> dict:
     memory.clear(session_id)
+    memory_sql.delete_session(session_id)
     return {"status": "cleared", "session_id": session_id}
 
+@app.delete("/sessions/{session_id}")
+async def delete_session(session_id: str) -> dict:
+    memory.clear(session_id)
+    memory_sql.delete_session(session_id)
+    return {"status": "deleted", "session_id": session_id}
 
 @app.post("/voice/transcribe")
 async def transcribe(

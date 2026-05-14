@@ -38,3 +38,14 @@ Thumbs.db
 
 # Logs
 *.log
+
+#app run scripts
+run_app.ps1
+
+#tests
+test.py
+rollback_requirements.txt
+workspace/
+
+#database
+chat_history.db

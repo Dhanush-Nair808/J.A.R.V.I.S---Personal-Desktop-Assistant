@@ -12,7 +12,7 @@ from typing import Deque, Dict, List
 
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 
-DEFAULT_MAX_TURNS = 20  # 20 user+assistant pairs
+DEFAULT_MAX_TURNS = 8  # 8 user+assistant pairs
 
 
 class ConversationMemory:

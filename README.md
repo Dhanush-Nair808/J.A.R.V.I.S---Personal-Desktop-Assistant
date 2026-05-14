@@ -1,113 +1,196 @@
-# Personal Voice Assistant
+# J.A.R.V.I.S. - Your Personal AI Assistant
 
-A production-ready desktop personal voice assistant built with **FastAPI**,
-**Streamlit**, **LangChain**, **Google Gemini**, **faster-whisper** (STT), and
-**edge-tts** (TTS). Async-first, modular, Python 3.10 compatible.
+**Just Another Remarkably Intelligent Virtual Intelligent System**
 
-## Project layout
+A powerful **desktop voice assistant** with full file system access, automation capabilities, voice interaction, and tool-using AI agent — built for **Myself**.
 
-```
-voice-assistant/
-├── backend/
-│   ├── main.py            # FastAPI app
-│   ├── agent.py           # LangChain agent (create_tool_calling_agent)
-│   ├── memory.py          # Per-session chat memory
-│   ├── tools/
-│   │   ├── __init__.py
-│   │   └── system_tools.py  # open_app, open_website, create_file
-│   └── voice/
-│       ├── stt.py         # faster-whisper async wrapper
-│       └── tts.py         # edge-tts async wrapper
-├── frontend/
-│   └── app.py             # Streamlit UI
-├── config.py              # Centralised settings (.env)
+---
+
+## ✨ Overview
+
+J.A.R.V.I.S. is a **local-first personal AI assistant** that combines:
+- Advanced LLM reasoning (Mistral Large)
+- Voice input/output (Whisper + Edge TTS)
+- Deep desktop integration (file ops, mouse/keyboard, apps, VS Code)
+- Secure sandboxed execution (restricted to your user folders)
+
+It runs as a **FastAPI backend** + **Streamlit frontend** and gives you natural language control over your Windows machine.
+
+---
+
+## 🚀 Features
+
+### Core Capabilities
+- **Voice Interaction**: Speak → Transcribe (faster-whisper) → AI responds → TTS (edge-tts)
+- **Text Chat**: Full conversational memory with history
+- **Tool Use Agent**: React-style agent that can call tools autonomously
+
+### File & Folder Management
+- Create, read, write, delete, copy, move files/folders
+- Search files with glob patterns (`*.py`, `report*.xlsx`)
+- Full access to **Desktop, Documents, Downloads, OneDrive**, etc.
+
+### Development & Productivity
+- Create and open VS Code projects instantly
+- Type text, press hotkeys, control mouse
+- Take screenshots
+- Run safe system commands
+
+### System Control
+- Launch/close applications (Chrome, VS Code, Spotify, Word, etc.)
+- View running processes and system info
+- Shutdown/restart with safety delays
+- Send emails with attachments
+
+### Security
+- Strictly guarded to user-space directories only
+- No access to system32, Program Files, or outside your profile
+
+---
+
+## 📁 Project Structure
+voice-assistant/                          # Environment variables (API keys, config)
+├── README.md
 ├── requirements.txt
-└── .env.example
-```
+├── run_app.ps1                   # One-click launcher for Windows
+├── wake_listener.py
+│
+├── backend/                      # FastAPI Backend
+│   ├── __init__.py
+│   ├── main.py                   # FastAPI entrypoint
+│   ├── agent.py                  # LangGraph AI Agent
+│   ├── config.py                 # Settings & environment loader
+│   ├── memory.py                 # In-memory conversation store
+│   ├── memory_sql.py             # SQLite history persistence
+│   │
+│   ├── tools/                    # Tool definitions
+│   │   ├── __init__.py
+│   │   └── system_tools.py       # All J.A.R.V.I.S. tools (files, apps, etc.)
+│   │
+│   └── voice/                    # Voice capabilities
+│       ├── __init__.py
+│       ├── stt.py                # Speech-to-Text (faster-whisper)
+│       └── tts.py                # Text-to-Speech (edge-tts)
+│
+├── frontend/                     # Streamlit User Interface
+│   └── app.py                    # Main frontend application
+│
+├── workspace/                    # Default safe workspace folder
+│
+├── .streamlit/                   # Streamlit configuration
+├── .vscode/                      # VS Code settings
 
-## Setup
 
-1. **Create a virtualenv** (Python 3.10+):
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate          # macOS / Linux
-   .venv\Scripts\activate             # Windows
-   ```
+## 🛠️ Installation & Setup
 
-2. **Install dependencies**:
+### 1. Clone / Download the Project
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 2. Create Virtual Environment
+```powershell
+python -m venv venv
+venv\Scripts\activate
+3. Install Dependencies
+PowerShellpip install -r requirements.txt
+(You may need to create requirements.txt with: fastapi, uvicorn, streamlit, langchain, faster-whisper, edge-tts, pyautogui, etc.)*
+4. Configure .env
+env# AI
+MISTRAL_API_KEY=your_mistral_api_key_here
+MISTRAL_MODEL=mistral-large-latest
 
-   `faster-whisper` requires `ffmpeg` to be available on your system (e.g.
-   `brew install ffmpeg`, `apt install ffmpeg`, or `choco install ffmpeg`).
+# Optional: Google (if using Gemini fallback)
+GOOGLE_API_KEY=...
 
-3. **Configure environment**:
+# Voice
+WHISPER_MODEL=base
+WHISPER_DEVICE=cpu
+TTS_VOICE=en-US-AriaNeural
 
-   ```bash
-   cp .env.example .env
-   # then edit .env and put your real GOOGLE_API_KEY
-   ```
+# Email (Gmail SMTP recommended)
+SMTP_EMAIL=your.email@gmail.com
+SMTP_PASSWORD=your_app_password_here
 
-   Get a Gemini key at <https://aistudio.google.com/app/apikey>.
+# Others
+BACKEND_HOST=127.0.0.1
+BACKEND_PORT=8000
+Note: For Gmail, use an App Password, not your regular password.
 
-## Run
+▶️ Running J.A.R.V.I.S.
+Easiest Way (Recommended)
 
-Open two terminals.
+Double-click run_app.ps1 (or run in PowerShell).
+This will:
 
-**Terminal 1 — backend:**
+Start the FastAPI backend (hidden)
+Start the Streamlit frontend (hidden)
+Open your browser to http://localhost:8501
 
-```bash
+Manual Start
+
+PowerShell# Terminal 1
 uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
-```
 
-**Terminal 2 — frontend:**
-
-```bash
+# Terminal 2
 streamlit run frontend/app.py
-```
 
-Open the URL Streamlit prints (usually <http://localhost:8501>).
+📋 Available Tools (Agent Capabilities)
+The agent has access to these tool groups:
 
-## Try it
+Files: list_directory, create_file, read_file, write_to_file, delete_file, etc.
+Apps: open_app, close_app, list_running_processes
+Web: open_website, search_web
+Automation: type_text, press_keys, click_mouse, screenshot
+VS Code: open_vscode_project, create_vscode_project
+System: get_system_info, shutdown_computer, etc.
+Email: send_email, open_email_draft
 
-Type any of these into the chat box:
 
-- `open chrome`
-- `open youtube.com`
-- `create a file called notes.txt`
-- `what's a good way to learn Rust?`
+💡 Example Commands
 
-The assistant replies conversationally and invokes the matching tool when
-appropriate.
+"Create a new Python project called 'AI_Experiment' on Desktop and open in VS Code"
+"List all PDF files in my Documents folder"
+"Write a summary of today's tasks in notes.txt on Desktop"
+"Open Chrome and search for latest AI news"
+"Take a screenshot"
+"Send an email to john@example.com with subject 'Meeting Notes'"
 
-## API endpoints
 
-| Method | Path                       | Purpose                         |
-| ------ | -------------------------- | ------------------------------- |
-| GET    | `/health`                  | Backend / model health          |
-| POST   | `/chat`                    | Send a message, get a reply     |
-| GET    | `/history/{session_id}`    | Inspect a session's transcript  |
-| DELETE | `/history/{session_id}`    | Clear a session's transcript    |
-| POST   | `/voice/transcribe`        | Upload audio → transcript (STT) |
-| GET    | `/voice/speak?text=…`      | Stream synthesised speech (TTS) |
+🛡️ Security Model
 
-## Safety notes
+All file operations are validated against a whitelist of user directories.
+Dangerous commands (format, rm -rf, etc.) are blocked.
+Runs with your user privileges — never with admin rights.
 
-- `open_app` is restricted to a curated allow-list (Chrome, Firefox, Edge,
-  Safari, VS Code, Calculator, Notepad, TextEdit, Spotify, Terminal, Finder,
-  Explorer). Anything else is refused.
-- `open_website` only allows `http(s)` URLs with valid hosts.
-- `create_file` only writes inside `SAFE_ROOT` (default: `./workspace`).
-  Absolute paths and `..` traversal are rejected.
-- The agent is capped at 5 tool-call iterations per turn.
 
-## Notes
+🧠 Tech Stack
 
-- All FastAPI endpoints are `async`; the LLM is invoked via `ainvoke`.
-- Blocking work (`subprocess`, `webbrowser`, file IO, `faster-whisper`) is
-  dispatched through `asyncio.run_in_executor`.
-- Uses the modern `create_tool_calling_agent` + `AgentExecutor` API — no
-  deprecated `initialize_agent`.
+LLM: Mistral Large (via LangChain)
+Agent Framework: LangGraph ReAct Agent
+STT: faster-whisper
+TTS: edge-tts (high quality, streaming)
+Backend: FastAPI
+Frontend: Streamlit
+Automation: pyautogui + keyboard
+Database: SQLite (chat history)
+
+
+📌 Limitations
+
+Currently optimized for Windows
+Requires internet (LLM API + TTS)
+Voice recognition quality depends on microphone and Whisper model size
+Agent may occasionally hallucinate tool calls
+
+
+🔮 Future Enhancements
+
+Local LLM support (via Ollama/LM Studio)
+Vision capabilities (screenshot analysis)
+Calendar integration
+Custom voice training
+Multi-user sessions
+
+
+Made with ❤️ for maximum productivity and fun.
+
+J.A.R.V.I.S. is always at your service, Sir.
