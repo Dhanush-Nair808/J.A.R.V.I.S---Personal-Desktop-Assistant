@@ -62,6 +62,7 @@ It runs as a **FastAPI backend** + **Streamlit frontend** and gives you natural 
 ---
 
 ## 📁 Project Structure
+```text
 voice-assistant/
 ├── .streamlit/
 ├── .vscode/
@@ -89,7 +90,7 @@ voice-assistant/
 ├── requirements.txt              # Explicit python package dependencies
 ├── run_app.ps1                   # Automated local execution script
 └── wake_listener.py              # Hotword detection loop to trigger assistant
-
+```
 
 
 
