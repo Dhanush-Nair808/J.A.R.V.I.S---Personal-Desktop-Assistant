@@ -108,26 +108,36 @@ venv\Scripts\activate
 (You may need to create requirements.txt with: fastapi, uvicorn, streamlit, langchain, faster-whisper, edge-tts, pyautogui, etc.)
 
 4. Configure .env
+```text
 env# AI
 MISTRAL_API_KEY=your_mistral_api_key_here
 MISTRAL_MODEL=mistral-large-latest
+```
 
 Optional: Google (if using Gemini fallback)
+```text
 GOOGLE_API_KEY=...
+```
 
 Voice
+```text
 WHISPER_MODEL=base
 WHISPER_DEVICE=cpu
 TTS_VOICE=en-US-AriaNeural
+```
 
 Email (Gmail SMTP recommended)
+```text
 SMTP_EMAIL=your.email@gmail.com
 SMTP_PASSWORD=your_app_password_here
+```
 
 Others
+```
 BACKEND_HOST=127.0.0.1
 BACKEND_PORT=8000
 Note: For Gmail, use an App Password, not your regular password.
+```
 
 
 ## ▶️ Running J.A.R.V.I.S.
