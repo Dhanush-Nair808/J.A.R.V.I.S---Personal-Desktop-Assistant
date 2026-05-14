@@ -155,11 +155,11 @@ Now whenever you say "Hey Jarvis", the assistant will launch automatically.
 
 Double-click run_app.ps1 (or run in PowerShell).
 This will:
-
+```text
 Start the FastAPI backend (hidden)
 Start the Streamlit frontend (hidden)
 Open your browser to http://localhost:8501
-
+``
 Manual Start
 
 PowerShell Terminal 1
@@ -173,6 +173,7 @@ streamlit run frontend/app.py
 ```
 
 ## 📋 Available Tools (Agent Capabilities)
+```text
 The agent has access to these tool groups:
 
 Files: list_directory, create_file, read_file, write_to_file, delete_file, etc.
@@ -182,27 +183,27 @@ Automation: type_text, press_keys, click_mouse, screenshot
 VS Code: open_vscode_project, create_vscode_project
 System: get_system_info, shutdown_computer, etc.
 Email: send_email, open_email_draft
-
+```
  
 ## 💡 Example Commands
- 
+```text
 "Create a new Python project called 'AI_Experiment' on Desktop and open in VS Code"
 "List all PDF files in my Documents folder"
 "Write a summary of today's tasks in notes.txt on Desktop"
 "Open Chrome and search for latest AI news"
 "Take a screenshot"
 "Send an email to john@example.com with subject 'Meeting Notes'"
-
+```
 
 ## 🛡️ Security Model
-
+```text
 All file operations are validated against a whitelist of user directories.
 Dangerous commands (format, rm -rf, etc.) are blocked.
 Runs with your user privileges — never with admin rights.
-
+```
 
 ## 🧠 Tech Stack
-
+```text
 LLM: Mistral Large (via LangChain)
 Agent Framework: LangGraph ReAct Agent
 STT: faster-whisper
@@ -212,24 +213,24 @@ Frontend: Streamlit
 Automation: pyautogui + keyboard
 Database: SQLite (chat history)
 Wakeword: openwakeword
-
+```
 
 ## 📌 Limitations
-
+```text
 Currently optimized for Windows
 Requires internet (LLM API + TTS)
 Voice recognition quality depends on microphone and Whisper model size
 Agent may occasionally hallucinate tool calls
-
+```
 
 ## 🔮 Future Enhancements
-
+```text
 Local LLM support (via Ollama/LM Studio)
 Vision capabilities (screenshot analysis)
 Calendar integration
 Custom voice training
 Multi-user sessions
-
+```
 
 Made with ❤️ for maximum productivity and fun.
 
