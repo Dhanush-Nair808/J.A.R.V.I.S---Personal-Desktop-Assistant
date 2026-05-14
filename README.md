@@ -130,9 +130,9 @@ BACKEND_PORT=8000
 Note: For Gmail, use an App Password, not your regular password.
 
 
-▶️ Running J.A.R.V.I.S.
+## ▶️ Running J.A.R.V.I.S.
 
-Wake Word Activation (Recommended)
+###Wake Word Activation (Recommended)
 
 To make "Hey Jarvis" work automatically on startup:
 
@@ -151,7 +151,7 @@ Save the file and restart your computer.
 
 Now whenever you say "Hey Jarvis", the assistant will launch automatically.
 
-Easiest Way
+###Easiest Way
 
 Double-click run_app.ps1 (or run in PowerShell).
 This will:
@@ -162,17 +162,17 @@ Open your browser to http://localhost:8501
 
 Manual Start
 
-PowerShell# Terminal 1
+PowerShell Terminal 1
 ```
 uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-# Terminal 2
+Terminal 2
 ```
 streamlit run frontend/app.py
 ```
 
-📋 Available Tools (Agent Capabilities)
+##📋 Available Tools (Agent Capabilities)
 The agent has access to these tool groups:
 
 Files: list_directory, create_file, read_file, write_to_file, delete_file, etc.
@@ -184,7 +184,7 @@ System: get_system_info, shutdown_computer, etc.
 Email: send_email, open_email_draft
 
 
-💡 Example Commands
+##💡 Example Commands
 
 "Create a new Python project called 'AI_Experiment' on Desktop and open in VS Code"
 "List all PDF files in my Documents folder"
@@ -194,14 +194,14 @@ Email: send_email, open_email_draft
 "Send an email to john@example.com with subject 'Meeting Notes'"
 
 
-🛡️ Security Model
+##🛡️ Security Model
 
 All file operations are validated against a whitelist of user directories.
 Dangerous commands (format, rm -rf, etc.) are blocked.
 Runs with your user privileges — never with admin rights.
 
 
-🧠 Tech Stack
+##🧠 Tech Stack
 
 LLM: Mistral Large (via LangChain)
 Agent Framework: LangGraph ReAct Agent
@@ -214,7 +214,7 @@ Database: SQLite (chat history)
 Wakeword: openwakeword
 
 
-📌 Limitations
+##📌 Limitations
 
 Currently optimized for Windows
 Requires internet (LLM API + TTS)
@@ -222,7 +222,7 @@ Voice recognition quality depends on microphone and Whisper model size
 Agent may occasionally hallucinate tool calls
 
 
-🔮 Future Enhancements
+##🔮 Future Enhancements
 
 Local LLM support (via Ollama/LM Studio)
 Vision capabilities (screenshot analysis)
