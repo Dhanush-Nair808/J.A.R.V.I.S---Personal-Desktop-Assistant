@@ -155,12 +155,12 @@ Now whenever you say "Hey Jarvis", the assistant will launch automatically.
 
 Double-click run_app.ps1 (or run in PowerShell).
 This will:
-```text
+
 Start the FastAPI backend (hidden)
 Start the Streamlit frontend (hidden)
 Open your browser to http://localhost:8501
-``
-Manual Start
+
+### Manual Start
 
 PowerShell Terminal 1
 ```
