@@ -5,13 +5,21 @@
 A powerful **desktop voice assistant** with full file system access, automation capabilities, voice interaction, and tool-using AI agent — built for **Myself**.
 
 ---
+## ⚠️ Important Note
+
+**This J.A.R.V.I.S. is customized for Dhanush Nair.**  
+It contains some hardcoded paths for the user `Dhanush Nair`.  
+If someone else wants to use it, they must replace all occurrences of `Dhanush Nair` with their own Windows username.
+
+---
 
 ## ✨ Overview
 
 J.A.R.V.I.S. is a **local-first personal AI assistant** that combines:
 - Advanced LLM reasoning (Mistral Large)
 - Voice input/output (Whisper + Edge TTS)
-- Deep desktop integration (file ops, mouse/keyboard, apps, VS Code)
+- Deep desktop integration (files, mouse/keyboard, apps, VS Code)
+- Wake word activation ("Hey Jarvis")
 - Secure sandboxed execution (restricted to your user folders)
 
 It runs as a **FastAPI backend** + **Streamlit frontend** and gives you natural language control over your Windows machine.
@@ -24,6 +32,11 @@ It runs as a **FastAPI backend** + **Streamlit frontend** and gives you natural 
 - **Voice Interaction**: Speak → Transcribe (faster-whisper) → AI responds → TTS (edge-tts)
 - **Text Chat**: Full conversational memory with history
 - **Tool Use Agent**: React-style agent that can call tools autonomously
+
+### Wake Word Feature
+- Say **"Hey Jarvis"** to automatically launch the assistant
+- Say **"Alexa"** to stop the assistant
+- Runs in background via Windows Startup
 
 ### File & Folder Management
 - Create, read, write, delete, copy, move files/folders
@@ -116,7 +129,26 @@ BACKEND_PORT=8000
 Note: For Gmail, use an App Password, not your regular password.
 
 ▶️ Running J.A.R.V.I.S.
-Easiest Way (Recommended)
+
+Wake Word Activation (Recommended)
+
+To make "Hey Jarvis" work automatically on startup:
+
+Press Win + R, type shell:startup and press Enter.
+Create a new text file named Start_JARVIS_Listener.bat
+Paste the following into it:
+
+batch@echo off
+title J.A.R.V.I.S Wake Word Listener
+cd /d "C:\Users\Dhanush Nair\OneDrive\Desktop\voice-assistant\voice-assistant"
+venv\Scripts\python.exe wake_listener.py
+pause
+
+Save the file and restart your computer.
+
+Now whenever you say "Hey Jarvis", the assistant will launch automatically.
+
+Easiest Way
 
 Double-click run_app.ps1 (or run in PowerShell).
 This will:
@@ -172,6 +204,7 @@ Backend: FastAPI
 Frontend: Streamlit
 Automation: pyautogui + keyboard
 Database: SQLite (chat history)
+Wakeword: openwakeword
 
 
 📌 Limitations

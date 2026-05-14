@@ -10,6 +10,7 @@ load_dotenv()
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
+
 @dataclass(frozen=True)
 class Settings:
     """Centralised, immutable application settings."""
@@ -31,6 +32,14 @@ class Settings:
     smtp_password: str
     smtp_server: str
     smtp_port: int
+
+    # Wake Word Listener Settings
+    wakeword_enabled: bool
+    wakeword_model: str
+    wakeword_sensitivity: float
+    terminate_word: str
+    terminate_sensitivity: float
+    project_root: Path
 
     @property
     def chat_endpoint(self) -> str:
@@ -70,11 +79,21 @@ def get_settings() -> Settings:
         whisper_compute_type=os.getenv("WHISPER_COMPUTE_TYPE", "int8"),
         tts_voice=os.getenv("TTS_VOICE", "en-US-AriaNeural"),
         safe_root=safe_root,
-        # SMTP logic
+        
+        # SMTP settings
         smtp_email=os.getenv("SMTP_EMAIL", ""),
         smtp_password=os.getenv("SMTP_PASSWORD", ""),
         smtp_server=os.getenv("SMTP_SERVER", "smtp.gmail.com"),
         smtp_port=int(os.getenv("SMTP_PORT", "587")),
+
+        # Wake Word Settings
+        wakeword_enabled=_bool(os.getenv("WAKEWORD_ENABLED"), True),
+        wakeword_model=os.getenv("WAKEWORD_MODEL", "hey_jarvis"),
+        wakeword_sensitivity=float(os.getenv("WAKEWORD_SENSITIVITY", 0.5)),
+        terminate_word=os.getenv("TERMINATE_WORD", "alexa"),
+        terminate_sensitivity=float(os.getenv("TERMINATE_SENSITIVITY", 0.5)),
+        project_root=Path(os.getenv("PROJECT_ROOT", str(PROJECT_ROOT))),
     )
+
 
 settings = get_settings()

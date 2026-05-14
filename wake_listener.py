@@ -1,21 +1,36 @@
+"""Wake word listener for J.A.R.V.I.S"""
+
 import openwakeword
 from openwakeword.model import Model
 import pyaudio
 import numpy as np
 import subprocess
-import sys
+from pathlib import Path
 
-# Suppress warnings
+# ================== WAKE WORD CONFIGURATION ==================
+WAKE_WORD = "hey_jarvis"
+TERMINATE_WORD = "alexa"
+
+WAKE_SENSITIVITY = 0.5
+TERMINATE_SENSITIVITY = 0.5
+
+# ================== YOUR PROJECT PATH ==================
+# Change this only if you move the project folder
+PROJECT_ROOT = Path(r"C:\Users\Dhanush Nair\OneDrive\Desktop\voice-assistant\voice-assistant")
+RUN_APP_PATH = PROJECT_ROOT / "run_app.ps1"
+# =======================================================
+
 openwakeword.utils.download_models()
 
-# Use ONNX model
 model = Model(
-    wakeword_models=["hey_jarvis", "alexa"],
+    wakeword_models=[WAKE_WORD, TERMINATE_WORD],
     inference_framework="onnx",
     ncpu=2
 )
 
-print("🎤 Listening for 'Hey Jarvis' or 'alexa'... (Press Ctrl+C to stop)")
+print("🎤 Wake Word Listener Started")
+print(f"   → Say 'Hey Jarvis' to launch")
+print(f"   → Say 'Alexa' to stop")
 
 # Audio setup
 CHUNK = 1280
@@ -29,12 +44,12 @@ stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_
 assistant_active = False
 assistant_proc = None
 
-# List of common browser processes to kill
-
 
 def kill_browsers():
-    
-    subprocess.call(['taskkill', '/F', '/IM', 'msedge.exe'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    for browser in ['msedge.exe']:
+        subprocess.call(['taskkill', '/F', '/IM', browser], 
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
 
 try:
     while True:
@@ -42,37 +57,42 @@ try:
         audio_data = np.frombuffer(data, dtype=np.int16)
         prediction = model.predict(audio_data)
 
-        # Hey Jarvis: Launch assistant
-        if prediction.get("hey_jarvis", 0) > 0.5:
-            print("\n✅ Hey Jarvis detected! Launching assistant...")
+        # === Launch J.A.R.V.I.S ===
+        if prediction.get(WAKE_WORD, 0) > WAKE_SENSITIVITY:
+            print(f"\n✅ 'Hey Jarvis' detected! Launching J.A.R.V.I.S...")
+
             if not assistant_active:
                 try:
-                    assistant_proc = subprocess.Popen(
-                        ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", "run_app.ps1"],
-                        cwd=r"C:\Users\Dhanush Nair\OneDrive\Desktop\voice-assistant\voice-assistant"
-                    )
-                    assistant_active = True
+                    if RUN_APP_PATH.exists():
+                        assistant_proc = subprocess.Popen(
+                            ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", str(RUN_APP_PATH)],
+                            cwd=PROJECT_ROOT
+                        )
+                        assistant_active = True
+                        print(f"   ✅ Launched successfully from: {RUN_APP_PATH}")
+                    else:
+                        print(f"❌ run_app.ps1 not found at: {RUN_APP_PATH}")
                 except Exception as e:
-                    print(f"Launch error: {e}")
+                    print(f"❌ Launch error: {e}")
 
-        # # Alexa: Terminate assistant and close browser
-        # if prediction.get("jarvis_terminate", 0) > 0.4:
-        #     prediction["alexa"] = 1.0
+        # === Terminate J.A.R.V.I.S ===
+        if prediction.get(TERMINATE_WORD, 0) > TERMINATE_SENSITIVITY:
+            print(f"\n🛑 'Alexa' detected! Shutting down J.A.R.V.I.S...")
             
-        if prediction.get("alexa", 0) > 0.5:
-            print("\n🛑 Terminating assistant and closing browser...")
             if assistant_proc:
                 subprocess.call(['taskkill', '/F', '/T', '/PID', str(assistant_proc.pid)])
                 assistant_active = False
                 assistant_proc = None
-            kill_browsers()  # Close all browser processes
+            
+            kill_browsers()
 
 except KeyboardInterrupt:
-    print("\nStopping wake word listener...")
+    print("\n⛔ Stopping wake word listener...")
+
 finally:
     if assistant_proc:
         subprocess.call(['taskkill', '/F', '/T', '/PID', str(assistant_proc.pid)])
-    kill_browsers()  # Ensure browsers are closed on exit
+    kill_browsers()
     stream.stop_stream()
     stream.close()
     p.terminate()

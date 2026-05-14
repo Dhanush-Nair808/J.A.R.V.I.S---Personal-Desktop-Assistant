@@ -40,7 +40,7 @@ Thumbs.db
 *.log
 
 #app run scripts
-run_app.ps1
+
 
 #tests
 test.py
