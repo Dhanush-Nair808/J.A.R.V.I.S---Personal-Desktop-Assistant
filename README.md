@@ -19,7 +19,7 @@ J.A.R.V.I.S. is a **local-first personal AI assistant** that combines:
 - Advanced LLM reasoning (Mistral Large)
 - Voice input/output (Whisper + Edge TTS)
 - Deep desktop integration (files, mouse/keyboard, apps, VS Code)
-- Wake word activation ("Hey Jarvis")
+- Wake word activation ("Hey Jarvis") and deactivation ("alexa")
 - Secure sandboxed execution (restricted to your user folders)
 
 It runs as a **FastAPI backend** + **Streamlit frontend** and gives you natural language control over your Windows machine.
@@ -150,6 +150,8 @@ pause
 Save the file and restart your computer.
 
 Now whenever you say "Hey Jarvis", the assistant will launch automatically.
+
+To terminate the application say "alexa".
 
 ### Easiest Way
 
